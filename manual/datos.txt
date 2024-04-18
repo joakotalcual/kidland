@@ -1,0 +1,26 @@
+
+
+Username: Administrador
+Password: 123456789
+
+version php recomedada 5.6
+
+DATOS DE BASE DE DATOS por defecto 
+Nombre base de datos: pos_simple
+usuario base de datos root
+contraseña bd : 
+Ruta para cambiar estos datos: pos/app/database.php
+
+DIRECCION URL por defecto : http://localhost/pos/
+
+Ruta para cambiar DIRECCION URL : pos/app/config.php
+luego buscas:  $config['base_url'] = 'http://localhost/pos/';
+en la direccion de arriba cambias la nueva url en la que esta tu sistema
+
+
+
+RECUERDA CREAR LA BASE DE DATOS EN TU servidor local xampp o en tu host ,luego importar la base de datos 
+que esta con el nombre pos_simple.sql en la carpeta manual
+
+
+
