@@ -64,10 +64,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'pos_n',
+	'hostname' => 'brh9vy2qiwsevpy2xjsv-mysql.services.clever-cloud.com',
+	'username' => 'u6v1ujfpuwf3njr8',
+	'password' => 'lNcdk3d4eiNI0m3IWNiH',
+	'database' => 'brh9vy2qiwsevpy2xjsv',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => 'tec_',
 	'pconnect' => FALSE,
