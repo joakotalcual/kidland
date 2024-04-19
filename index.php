@@ -1,5 +1,5 @@
 <?php
-
+try {
 /*
  * --------------------------------------------------------------------
  * SET YOUR TIMEZONE
@@ -300,3 +300,7 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 require_once BASEPATH.'core/CodeIgniter.php';
+
+} catch (\Throwable $th) {
+	echo $th->getMessage();
+}
