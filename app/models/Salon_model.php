@@ -163,11 +163,22 @@ class Salon_model extends CI_Model
     // HORARIO
     // 
     public function add_horario($data) {
-        if ($this->db->insert('horarios', $data)) {
-            return true;
+        // Contar la cantidad de registros actuales en la tabla 'horarios'
+        $num_rows = $this->db->count_all_results('horarios');
+
+        // Verificar si ya existen dos registros en la tabla
+        if ($num_rows < 2) {
+            // Si hay menos de dos registros, intentar insertar el nuevo registro
+            if ($this->db->insert('horarios', $data)) {
+                return true; // La inserción fue exitosa
+            } else {
+                return false; // Hubo un error en la inserción
+            }
+        } else {
+            return false; // Ya existen dos registros, no se puede insertar más
         }
-        return false;
     }
+
 
     public function updateHorario($id, $data = array()) {
         if ($this->db->update('horarios', $data, array('id' => $id))) {
@@ -196,5 +207,80 @@ class Salon_model extends CI_Model
             return true;
         }
         return FALSE;
+    }
+
+    public function obtenerCantidadDisponible($idInventario, $cantidad) {
+        // Consultar la cantidad disponible del inventario en la base de datos
+        $this->db->select('cantidad');
+        $this->db->where('id', $idInventario);
+        $query = $this->db->get('inventario_salones');
+
+        if ($query->num_rows() > 0) {
+            // Obtener la cantidad disponible del resultado de la consulta
+            $row = $query->row();
+            $cantidadDisponible = $row->cantidad;
+            
+            // Verificar si la cantidad disponible es suficiente
+            if ($cantidadDisponible >= $cantidad) {
+                // Restar la cantidad seleccionada del inventario
+                $cantidadDisponible -= $cantidad;
+                // Actualizar la cantidad disponible en la base de datos
+                $this->db->set('cantidad', $cantidadDisponible);
+                $this->db->where('id', $idInventario);
+                $this->db->update('inventario_salones');
+            }
+            
+            return $row->cantidad;
+        } else {
+            return 0;
+        }
+    }
+
+    public function restablecerCantidad($idInventario, $cantidadEliminada) {
+        $this->db->set('cantidad', 'cantidad + ' . $cantidadEliminada, FALSE);
+        $this->db->where('id', $idInventario);
+        return $this->db->update('inventario_salones');
+    }
+
+    public function verificarDisponibilidad($horaEntrada, $horaSalida, $fecha, $idSalon) {
+        // Consultar la base de datos para verificar si hay algún alquiler en el rango de tiempo especificado y para el salón específico
+        $this->db->where('id_salon', $idSalon); // Agregar la condición para el ID del salón
+        $this->db->where('hora_entrada', $horaEntrada);
+        $this->db->where('hora_salida', $horaSalida);
+        $this->db->where("DATE(created_at)", $fecha);
+
+        $query = $this->db->get('alquiler_salones');
+
+        return $query->num_rows() == 0; // Devuelve true si no hay alquileres en ese rango de tiempo y para el salón especificado, false si hay alquileres
+    }
+
+
+
+
+
+    public function obtenerHoraEntrada($idHorario) {
+        $this->db->select('hora_entrada');
+        $this->db->where('id', $idHorario);
+        $query = $this->db->get('horarios');
+
+        if ($query->num_rows() > 0) {
+            $row = $query->row();
+            return $row->hora_entrada;
+        } else {
+            return null;
+        }
+    }
+
+    public function obtenerHoraSalida($idHorario) {
+        $this->db->select('hora_salida');
+        $this->db->where('id', $idHorario);
+        $query = $this->db->get('horarios');
+
+        if ($query->num_rows() > 0) {
+            $row = $query->row();
+            return $row->hora_salida;
+        } else {
+            return null;
+        }
     }
 }

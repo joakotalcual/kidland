@@ -21,7 +21,7 @@
                 <tbody>
                     <tr>
                         <th style="text-align: left;">Fecha de la alquiler:</th>
-                        <td><?= $alquiler->created_at ?></td> <!-- Cambiar por la fecha de la alquiler -->
+                        <td><?= $alquiler->fecha ?></td> <!-- Cambiar por la fecha de la alquiler -->
                     </tr>
                     <tr>
                         <th style="text-align: left;">Cliente:</th>

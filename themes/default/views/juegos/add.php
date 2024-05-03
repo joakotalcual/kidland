@@ -17,7 +17,7 @@
                                     <?= form_input('nombre', set_value('nombre'), 'class="form-control tip" id="nombre"  required="required"'); ?>
                                 </div>
                                 <div class="form-group">
-                                    <?= lang('tipos', 'tipos'); ?>
+                                    <?= lang('Tipos', 'Tipos'); ?>
                                     <?php
                                     $tip[''] = lang("select")." ".lang("tipos");
                                     foreach($tipos as $tipo) {

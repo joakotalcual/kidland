@@ -81,8 +81,8 @@
                             <tr class="active">
                                 <th style="max-width:30px;"><?= lang("id"); ?></th>
                                 <th><?= lang("Juego"); ?></th>
-                                <th><?= lang("tiempo"); ?></th>
-                                <th><?= lang("precio"); ?></th>
+                                <th><?= lang("Tiempo / Horas"); ?></th>
+                                <th><?= lang("Precio"); ?></th>
                                 <th style="width:30px;"><?= lang("actions"); ?></th>
                             </tr>
                         </thead>
@@ -95,8 +95,8 @@
                             <tr>
                                 <th style="max-width:30px;"><input type="text" class="text_filter" placeholder="[<?= lang('id'); ?>]"></th>
                                 <th><input type="text" class="text_filter" placeholder="[<?= lang('Juego'); ?>]"></th>
-                                <th><input type="text" class="text_filter" placeholder="[<?= lang('tiempo'); ?>]"></th>
-                                <th><input type="text" class="text_filter" placeholder="[<?= lang('precio'); ?>]"></th>
+                                <th><input type="text" class="text_filter" placeholder="[<?= lang('Tiempo / Horas'); ?>]"></th>
+                                <th><input type="text" class="text_filter" placeholder="[<?= lang('Precio'); ?>]"></th>
                                 <th style="width:30px;"><?= lang("actions"); ?></th>
                             </tr>
                             <tr>

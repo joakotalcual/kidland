@@ -636,7 +636,7 @@ class Restaurante extends MY_Controller {
         $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
-    public function obtener_insumos_receta($recetaId) {
+    public function obtener_insumos_receta($recetaId, $cantidad_web) {
         // Seleccionar los campos necesarios
         $this->db->select('rti.id_insumo, rti.cantidad, i.cantidad AS cantidad_actual');
 
@@ -660,7 +660,7 @@ class Restaurante extends MY_Controller {
             // Calcular la cantidad a devolver para cada insumo
             $insumosDevueltos = array();
             foreach ($insumos as $insumo) {
-                $cantidadDevuelta = $insumo->cantidad;
+                $cantidadDevuelta = $insumo->cantidad * $cantidad_web;
                 $cantidadActual = $insumo->cantidad_actual;
                 $cantidadDisponible = $cantidadActual + $cantidadDevuelta;
                 $insumosDevueltos[] = array(
@@ -715,7 +715,11 @@ class Restaurante extends MY_Controller {
         $this->datatables->join('mesas', 'pedidos.id_cliente = mesas.id', 'left');
 
         // Definir las columnas personalizadas, incluyendo el enlace para editar y eliminar
-        $this->datatables->add_column("Actions", "<div><a href='" . site_url('restaurante/edit_pedidos/$1') . "' title='" . lang("edit_tipo") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> <a href='" . site_url('restaurante/delete_pedidos/$1') . "' onClick=\"return confirm('" . lang('alert_x_tipo') . "')\" title='" . lang("delete_tipo") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div>", "pid, nombre, precio, tiempo");
+        $this->datatables->add_column(
+            "Actions",
+            "<div><a href='" . site_url('restaurante/edit_pedidos/$1') . "' title='" . lang("edit_tipo") . "' class='tip btn btn-warning btn-xs'><i class='fa fa-edit'></i></a> <a href='" . site_url('restaurante/delete_pedidos/$1') . "' onClick=\"return confirm('" . lang('Seguro que desea eliminar el pedido?') . "')\" title='" . lang("delete_tipo") . "' class='tip btn btn-danger btn-xs'><i class='fa fa-trash-o'></i></a></div>",
+            "pid, nombre, precio, tiempo"
+        );
 
         // Eliminar la columna 'pid' que se usó para el enlace de acciones
         $this->datatables->unset_column('pid');
@@ -846,11 +850,12 @@ class Restaurante extends MY_Controller {
             redirect('pos');
         }
 
-        $this->restaurante_model->delete_pedido_tiene_recetas($id);
-        $this->restaurante_model->delete_cliente_tiene_pedidos($id);
+        
 
         if ($this->restaurante_model->deletePedidos($id)) {
             $this->session->set_flashdata('message', lang("pedido_deleted"));
+            $this->restaurante_model->delete_pedido_tiene_recetas($id);
+            $this->restaurante_model->delete_cliente_tiene_pedidos($id);
             redirect('restaurante/list_pedidos');
         }
 

@@ -177,6 +177,8 @@
                         <i class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
+                        <li id=""><a href="<?= site_url('salones/list_alquiler'); ?>"><i class="fa fa-circle-o"></i> <?= lang('List Alquiler'); ?></a></li>
+                        <li class="divider"></li>
                         <li id=""><a href="<?= site_url('salones/list_salones'); ?>"><i class="fa fa-circle-o"></i> <?= lang('List Salones'); ?></a></li>
                         <li id=""><a href="<?= site_url('salones/add_salones'); ?>"><i class="fa fa-circle-o"></i> <?= lang('Agregar Salones'); ?></a></li>
                         <li class="divider"></li>

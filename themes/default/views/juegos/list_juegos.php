@@ -79,8 +79,8 @@
                         <thead>
                             <tr class="active">
                                 <th style="max-width:30px;"><?= lang("id"); ?></th>
-                                <th><?= lang("nombre"); ?></th>
-                                <th><?= lang("tipo"); ?></th>
+                                <th><?= lang("Nombre"); ?></th>
+                                <th><?= lang("Tipo"); ?></th>
                                 <th style="width:30px;"><?= lang("actions"); ?></th>
                             </tr>
                         </thead>
@@ -92,8 +92,8 @@
                         <tfoot>
                             <tr>
                                 <th style="max-width:30px;"><input type="text" class="text_filter" placeholder="[<?= lang('id'); ?>]"></th>
-                                <th><input type="text" class="text_filter" placeholder="[<?= lang('nombre'); ?>]"></th>
-                                <th><input type="text" class="text_filter" placeholder="[<?= lang('tipo'); ?>]"></th>
+                                <th><input type="text" class="text_filter" placeholder="[<?= lang('Nombre'); ?>]"></th>
+                                <th><input type="text" class="text_filter" placeholder="[<?= lang('Tipo'); ?>]"></th>
                                 <th style="width:30px;"><?= lang("actions"); ?></th>
                             </tr>
                             <tr>

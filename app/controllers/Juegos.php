@@ -1129,9 +1129,9 @@ class Juegos extends MY_Controller {
     }
 
     public function escaneoqr() {
-        $this->data['page_title'] = lang('escaneoqr');
-        $bc = array(array('link' => '#', 'page' => lang('escaneoqr')));
-        $meta = array('page_title' => lang('escaneoqr'), 'bc' => $bc);
+        $this->data['page_title'] = lang('Escaneo QR');
+        $bc = array(array('link' => '#', 'page' => lang('Escaneo QR')));
+        $meta = array('page_title' => lang('Escaneo QR'), 'bc' => $bc);
         $this->page_construct('juegos/escaneoqr', $this->data, $meta);
     }
 }

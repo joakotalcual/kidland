@@ -4,29 +4,47 @@
     $(document).ready(function() {
 
         var table = $('#prTables').DataTable({
-
-            // 'ajax': '<?=site_url('products/get_products/'.$store->id);?>',
-            'ajax' : { url: '<?=site_url('restaurante/get_pedidos/'.$store->id);?>', type: 'POST', "data": function ( d ) {
-                d.<?=$this->security->get_csrf_token_name();?> = "<?=$this->security->get_csrf_hash()?>";
-                console.log(d);
-            }},
+            'ajax' : { 
+                url: '<?=site_url('restaurante/get_pedidos/'.$store->id);?>', 
+                type: 'POST', 
+                "data": function ( d ) {
+                    d.<?=$this->security->get_csrf_token_name();?> = "<?=$this->security->get_csrf_hash()?>";
+                    console.log(d);
+                }
+            },
             "buttons": [
-            { extend: 'copyHtml5', 'footer': false, exportOptions: { columns: [ 0, 1, 2, 3 ] } },
-            { extend: 'excelHtml5', 'footer': false, exportOptions: { columns: [ 0, 1, 2, 3 ] } },
-            { extend: 'csvHtml5', 'footer': false, exportOptions: { columns: [ 0, 1, 2, 3 ] } },
-            { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'A4', 'footer': false,
-            exportOptions: { columns: [ 0, 1, 2, 3 ] } },
-            { extend: 'colvis', text: 'Columns'},
+                { extend: 'copyHtml5', 'footer': false, exportOptions: { columns: [ 0, 1, 2, 3 ] } },
+                { extend: 'excelHtml5', 'footer': false, exportOptions: { columns: [ 0, 1, 2, 3 ] } },
+                { extend: 'csvHtml5', 'footer': false, exportOptions: { columns: [ 0, 1, 2, 3 ] } },
+                { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'A4', 'footer': false,
+                exportOptions: { columns: [ 0, 1, 2, 3 ] } },
+                { extend: 'colvis', text: 'Columns'},
             ],
             "columns": [
-            { "data": "pid", "visible": false },
-            { "data": "nombre_mesa" },
-            { "data": "total" },
-            { "data": "estado" },
-            { "data": "Actions", "searchable": false, "orderable": false }
-            ]
+                { "data": "pid", "visible": false },
+                { "data": "nombre_mesa" },
+                { "data": "total" },
+                { "data": "estado" },
+                { 
+                    "data": "Actions", 
+                    "searchable": false, 
+                    "orderable": false,
+                    "render": function(data, type, full, meta) {
+                        // Verificar si el estado del pedido es diferente de "completado"
+                        if (full.estado !== 'completado') {
+                            // Si el pedido no está completado, mostrar el botón de editar
+                            return data;
+                        } else {
+                            // Si el pedido está completado, no mostrar el botón de editar
+                            return data.replace('<a href=', '<span style="display:none;"><a href=').replace('</a>', '</a></span>');
+                        }
+                    }
 
+                }
+            ]
         });
+
+
 
         $('#search_table').on( 'keyup change', function (e) {
             var code = (e.keyCode ? e.keyCode : e.which);
@@ -95,8 +113,8 @@
                             <tr>
                                 <th style="max-width:30px;"><input type="text" class="text_filter" placeholder="[<?= lang('id'); ?>]"></th>
                                 <th><input type="text" class="text_filter" placeholder="[<?= lang('Mesa'); ?>]"></th>
-                                <th><input type="text" class="text_filter" placeholder="[<?= lang('total-'); ?>]"></th>
-                                <th><input type="text" class="text_filter" placeholder="[<?= lang('estado-'); ?>]"></th>
+                                <th><input type="text" class="text_filter" placeholder="[<?= lang('total'); ?>]"></th>
+                                <th><input type="text" class="text_filter" placeholder="[<?= lang('estado'); ?>]"></th>
                                 <th style="width:30px;"><?= lang("actions"); ?></th>
                             </tr>
                             <tr>

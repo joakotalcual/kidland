@@ -367,11 +367,49 @@ class Restaurante_model extends CI_Model
     }
 
     public function deletePedidos($id) {
-        if ($this->db->delete('pedidos', array('id' => $id))) {
-            return true;
+        // Obtener el pedido
+        $pedido = $this->db->get_where('pedidos', array('id' => $id))->row();
+
+        // Verificar si se encontró el pedido
+        if ($pedido) {
+            // Eliminar el pedido
+            
+                // Obtener las recetas asociadas a este pedido
+                $recetas = $this->db->get_where('pedido_tiene_recetas', array('id_pedido' => $id))->result();
+                // Recorrer cada receta asociada al pedido
+                foreach ($recetas as $receta) {
+                    // Obtener la cantidad de recetas
+                    $cantidadRecetas = $receta->cantidad;
+                    
+                    // Obtener la lista de insumos asociados a esta receta
+                    $insumosReceta = $this->db->get_where('receta_tiene_insumos', array('id_receta' => $receta->id_receta))->result();
+
+                    // Actualizar la cantidad de insumos en la tabla de insumos
+                    foreach ($insumosReceta as $insumoReceta) {
+                        // Obtener la cantidad de insumos necesarios
+                        $cantidadInsumos = $insumoReceta->cantidad * $cantidadRecetas;
+
+                        // Obtener el ID del insumo
+                        $idInsumo = $insumoReceta->id_insumo;
+
+                        // Obtener la información del insumo
+                        $insumo = $this->db->get_where('insumos', array('id' => $idInsumo))->row();
+
+                        // Actualizar la cantidad de insumos
+                        if ($insumo) {
+                            $nuevaCantidad = $insumo->cantidad + $cantidadInsumos;
+                            $this->db->where('id', $idInsumo);
+                            $this->db->update('insumos', array('cantidad' => $nuevaCantidad));
+                        }
+                    }
+                }
+            if ($this->db->delete('pedidos', array('id' => $id))) {
+               return true; // Operación exitosa
+            }
         }
-        return FALSE;
-    }
+    return false; // No se pudo eliminar el pedido
+}
+
 
     
 

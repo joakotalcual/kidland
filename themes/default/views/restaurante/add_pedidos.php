@@ -142,9 +142,10 @@
                 const row = event.target.closest("tr");
                 const recetaId = row.getAttribute("data-receta-id");
                 const subtotal = parseFloat(row.children[3].textContent);
+                const cantidadInsumo = parseFloat(row.children[1].textContent);
                 var csrfToken = document.querySelector('[name="spos_token"]').value;
                 // Realizar una solicitud al backend para obtener las cantidades de insumos de la receta
-                fetch('<?= site_url('restaurante/obtener_insumos_receta/') ?>' + recetaId,  {
+                fetch('<?= site_url('restaurante/obtener_insumos_receta/') ?>' + recetaId +'/' + cantidadInsumo,  {
                     headers: {
                         'spos_token': csrfToken
                     },
@@ -155,6 +156,7 @@
                         // Actualizar las cantidades de insumos en la base de datos
                         // Iterar sobre cada insumo en el array
                         data.insumos.forEach(insumo => {
+                            console.log(insumo.cantidad)
                             const idInsumo = insumo.id_insumo;
                             const cantidadDevuelta = insumo.cantidad;
 

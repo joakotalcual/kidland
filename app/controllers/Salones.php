@@ -26,6 +26,7 @@ class Salones extends MY_Controller {
         $metodoPago = $this->input->post('metodo_pago');
         $horarioId = $this->input->post('horario');
         $items = $this->input->post('items');
+        $fecha = $this->input->post('fecha');
 
         // Consultar el horario para obtener la hora de entrada y salida
         $horario = $this->db->get_where('horarios', array('id' => $horarioId))->row();
@@ -49,6 +50,7 @@ class Salones extends MY_Controller {
             'hora_entrada' => $horaEntrada,
             'hora_salida' => $horaSalida,
             'total' => $total,
+            'fecha' => $fecha,
             'metodo_pago' => $metodoPago,
             'items' => json_encode($items) // Convertir el array de items a JSON antes de guardar en la base de datos
         );
@@ -88,6 +90,24 @@ class Salones extends MY_Controller {
         $this->page_construct('salones/index', $this->data, $meta);
     }
 
+    function list_alquiler() {
+        $this->data['page_title'] = lang('list_alquiler');
+        $bc = array(array('link' => '#', 'page' => lang('list_alquiler')));
+        $meta = array('page_title' => lang('list_alquiler'), 'bc' => $bc);
+        $this->page_construct('salones/list_alquiler', $this->data, $meta);
+    }
+
+    function get_alquiler() {
+        $this->load->library('datatables');
+
+        $this->datatables->select('alquiler_salones.id as pid, alquiler_salones.nombre_cliente, alquiler_salones.nombre_salon, alquiler_salones.created_at, alquiler_salones.total, alquiler_salones.hora_entrada, alquiler_salones.hora_salida', FALSE);
+
+        $this->datatables->from('alquiler_salones');
+
+        $this->datatables->unset_column('pid');
+
+        echo $this->datatables->generate();
+    }
 
     function list_salones() {
         $this->data['page_title'] = lang('list_salones');
@@ -442,4 +462,57 @@ class Salones extends MY_Controller {
         }
 
     }
+
+    public function verificar_disponibilidad_inventario() {
+        $idInventario = $this->input->post('idInventario');
+        $cantidad = $this->input->post('cantidad');
+
+        // Lógica para verificar la disponibilidad del inventario
+        // Consultar la cantidad disponible del inventario en la base de datos
+        $cantidadDisponible = $this->salon_model->obtenerCantidadDisponible($idInventario, $cantidad);
+
+        // Verificar si la cantidad disponible es suficiente
+        if ($cantidadDisponible >= $cantidad) {
+            echo 'disponible';
+        } else {
+            echo 'no_disponible';
+        }
+    }
+
+    public function restablecer_cantidad_inventario() {
+        // Obtener los datos de la solicitud AJAX
+        $idInventario = $this->input->post('idInventario');
+        $cantidad = $this->input->post('cantidad');
+
+        // Lógica para restablecer la cantidad del inventario en la base de datos
+        $actualizado = $this->salon_model->restablecerCantidad($idInventario, $cantidad);
+
+        if ($actualizado) {
+            echo 'actualizado'; // Se actualizó correctamente la cantidad del inventario
+        } else {
+            echo 'error_actualizacion'; // Hubo un error al actualizar la cantidad del inventario
+        }
+    }
+
+    public function verificar_disponibilidad() {
+        // Obtener los datos de la solicitud AJAX
+        $fecha = $this->input->post('fecha');
+        $idHorario = $this->input->post('idHorario');
+        $idSalon = $this->input->post('salon');
+
+        // Convertir la fecha en un rango de tiempo para comparar con los alquileres existentes
+        $horaEntrada = $this->salon_model->obtenerHoraEntrada($idHorario);
+        $horaSalida = $this->salon_model->obtenerHoraSalida($idHorario); 
+
+        // Formar el rango de tiempo en formato datetime
+        $rangoTiempoInicio = $fecha . ' ' . $horaEntrada;
+        $rangoTiempoFin = $fecha . ' ' . $horaSalida;
+
+        // Consultar la base de datos para verificar la disponibilidad
+        $disponible = $this->salon_model->verificarDisponibilidad($horaEntrada,$horaSalida,$fecha, $idSalon);
+
+        // Devolver la respuesta a la solicitud AJAX
+        echo json_encode(['disponible' => $disponible]);
+    }
+
 }

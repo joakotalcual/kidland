@@ -80,9 +80,9 @@
                         <thead>
                             <tr class="active">
                                 <th style="max-width:30px;"><?= lang("id"); ?></th>
-                                <th><?= lang("nombre"); ?></th>
-                                <th><?= lang("precio"); ?></th>
-                                <th><?= lang("precio adicional"); ?></th>
+                                <th style="text-transform: capitalize;"><?= lang("nombre"); ?></th>
+                                <th style="text-transform: capitalize;"><?= lang("precio"); ?></th>
+                                <th style="text-transform: capitalize;"><?= lang("precio adicional"); ?></th>
                                 <th style="width:30px;"><?= lang("actions"); ?></th>
                             </tr>
                         </thead>
@@ -94,9 +94,9 @@
                         <tfoot>
                             <tr>
                                 <th style="max-width:30px;"><input type="text" class="text_filter" placeholder="[<?= lang('id'); ?>]"></th>
-                                <th><input type="text" class="text_filter" placeholder="[<?= lang('nombre'); ?>]"></th>
-                                <th><input type="text" class="text_filter" placeholder="[<?= lang('precio'); ?>]"></th>
-                                <th><input type="text" class="text_filter" placeholder="[<?= lang('precio adicional'); ?>]"></th>
+                                <th><input type="text" class="text_filter" placeholder="[<?= lang('nombre'); ?>]" style="text-transform: capitalize;"></th>
+                                <th><input type="text" class="text_filter" placeholder="[<?= lang('precio'); ?>]" style="text-transform: capitalize;"></th>
+                                <th><input type="text" class="text_filter" placeholder="[<?= lang('precio adicional'); ?>]" style="text-transform: capitalize;"></th>
                                 <th style="width:30px;"><?= lang("actions"); ?></th>
                             </tr>
                             <tr>
