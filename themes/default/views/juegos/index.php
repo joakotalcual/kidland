@@ -14,7 +14,7 @@
             <select id="selectTipo" class="form-control" style="margin-right: 10px;">
                 <option value="">Seleccionar tipo</option>
                 <?php foreach ($tipos as $tipo): ?>
-                    <option value="<?= $tipo->id ?>" data-precio="<?= $tipo->precio ?>" data-precio-adicional="<?= $tipo->precio_adicional ?>"><?= $tipo->nombre ?></option>
+                    <option value="<?= $tipo->id ?>" data-tiempo="<?= $tipo->tiempo ?>" data-precio="<?= $tipo->precio ?>" data-precio-adicional="<?= $tipo->precio_adicional ?>"><?= $tipo->nombre ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -27,9 +27,13 @@
                 <?php endforeach; ?>
             </select>
         </div>
-        <div class="d-flex" style="align-items: center;margin-top: 10px;">
+        <div class="d-flex" style="align-items: center;margin-top: 10px;display: none;">
             <div style="width: 60px;text-align: center;">Tiempo</div>
-            <input type="number" id="tiempo" value="0" class="form-control" style="margin-right: 10px;">
+            <input type="hidden" id="tiempo" value="0" class="form-control" style="margin-right: 10px;">
+        </div>
+        <div class="d-flex" style="align-items: center;margin-top: 10px;">
+            <div style="width: 60px;text-align: center;">Niños</div>
+            <input type="number" id="ninos" value="1" class="form-control" style="margin-right: 10px;">
         </div>
         <div style="margin-top:10px;width:100%">
             <div id="btnAgregar" class="btn btn-primary" style="width:-webkit-fill-available;margin:0px 10px">Agregar</div>
@@ -96,22 +100,7 @@
                     <input type="text" class="form-control" id="direccionPadre" placeholder="Dirección del Padre">
                 </div>
                 <div style="font-size: large;margin: 10px;font-weight: bold;">Datos Niño</div>
-                <div class="form-group col-sm-6" style="padding: 0px 10px;">
-                    <label for="nombreHijo">Nombre</label>
-                    <input type="text" class="form-control" id="nombreHijo" placeholder="Nombre del Hijo">
-                </div>
-                <div class="form-group col-sm-6" style="padding: 0px 10px;">
-                    <label for="telefonoHijo">Teléfono</label>
-                    <input type="text" class="form-control" id="telefonoHijo" placeholder="Teléfono del Hijo">
-                </div>
-                <div class="form-group col-sm-6" style="padding: 0px 10px;">
-                    <label for="instagramHijo">Instagram</label>
-                    <input type="text" class="form-control" id="instagramHijo" placeholder="Instagram del Hijo">
-                </div>
-                <div class="form-group col-sm-6" style="padding: 0px 10px;">
-                    <label for="direccionHijo">Dirección</label>
-                    <input type="text" class="form-control" id="direccionHijo" placeholder="Dirección del Hijo">
-                </div>
+
                 <div class="adicionales" style="margin-bottom: 10px;">
                     <div style="font-size: large;margin: 10px;font-weight: bold;">Datos Adicionales</div>
                 </div>
@@ -133,6 +122,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    var tiempoSelect = 0;
     $(document).ready(function(){
         $('#mm_juegos_principal').addClass('active');
         $('.treeview').removeClass('active');
@@ -144,14 +134,15 @@
             var selectedTipoNombre = $('#selectTipo option:selected').text();
             var selectedJuegoNombre = $('#selectJuego option:selected').text();
             var selectedTipoPrecio = $('#selectTipo option:selected').data('precio');
-            
+            var tiempo = $('#selectTipo option:selected').data('tiempo');
+            tiempoSelect = tiempo;
             if (!selectedTipo || !selectedJuego) {
                 alert('Por favor seleccione un tipo y un juego.');
                 return;
             }
             
-            if (!($('#tiempo').val() > 0)) {
-                alert('El tiempo debe ser mayor a 0.');
+            if (!($('#ninos').val() > 0)) {
+                alert('La cantidad de niños debe ser mayor a 0.');
                 return;
             }
 
@@ -170,7 +161,7 @@
                 return;
             }
             
-            var subtotal = parseFloat(selectedTipoPrecio).toFixed(2) * $('#tiempo').val();
+            var subtotal = parseFloat(selectedTipoPrecio).toFixed(2) * $('#ninos').val();
             var fila = '<tr><td>' + selectedJuegoNombre + '</td><td>' + selectedTipoNombre + '</td><td style="text-align: right;">' + subtotal + '</td><td style="text-align: right;"><button class="btnEliminar btn btn-danger"><i class="fa fa-trash-o"></i></button></td></tr>';
             $('#tablaPases tbody').append(fila);
             
@@ -195,7 +186,7 @@
 
             var tipo = $('#selectTipo').val();
             var juego = $('#selectJuego').val();
-            var tiempo = $('#tiempo').val();
+            var tiempo = tiempoSelect;
             // Recopilar los datos del modal para el padre
             var nombrePadre = $('#nombrePadre').val();
             var telefonoPadre = $('#telefonoPadre').val();
@@ -203,7 +194,12 @@
             var direccionPadre = $('#direccionPadre').val();
 
             // Recopilar los datos del modal para el hijo
-            var nombreHijo = $('#nombreHijo').val();
+            var nombresHijos = [];
+            $('.nombresHijos').each(function() {
+                var nombreHijo = $(this).val();
+                nombresHijos.push(nombreHijo);
+            });
+
             var telefonoHijo = $('#telefonoHijo').val();
             var instagramHijo = $('#instagramHijo').val();
             var direccionHijo = $('#direccionHijo').val();
@@ -237,7 +233,7 @@
                 telefonoPadre: telefonoPadre,
                 instagramPadre: instagramPadre,
                 direccionPadre: direccionPadre,
-                nombreHijo: nombreHijo,
+                nombresHijos: nombresHijos,
                 telefonoHijo: telefonoHijo,
                 instagramHijo: instagramHijo,
                 direccionHijo: direccionHijo,
@@ -291,13 +287,11 @@
 
                                 // Recorrer los elementos del array
                                 response.data[key].forEach(function(item) {
-                                    dataContent += '<ul style="list-style: none;padding: 0;margin-bottom:10px;">';
-                                    for (var prop in item) {
-                                        var propName = prop == 'telefono' ? 'Teléfono' : prop.charAt(0).toUpperCase() + prop.slice(1);
-                                        dataContent += '<li><strong>' + propName + ':</strong> ' + item[prop] + '</li>';
-                                    }
+                                    dataContent += '<ul style="list-style: none;padding: 0;margin-bottom:0px;">';
+                                    dataContent += '<li><strong>Nombre:</strong> ' + item + '</li>';
                                     dataContent += '</ul>';
                                 });
+
                             } else {
                                 // Si no es un array, mostrar el valor directamente
                                 if (key !== 'tipo' && key !== 'store' && key !== 'juego' && key !== 'tipo_pase' && key !== 'tiempo' && key !== 'total' && key !== 'fecha_actual') {
@@ -314,10 +308,10 @@
                                         dataContent += '<div style="display:flex;"><div style="text-align: justify;max-width: 180px;">'
                                         dataContent += '<p style="margin-top:10px; margin-bottom:0">Datos Padre</p>';
                                     }
-                                    if(key == 'nombreHijo'){
+                                    if(key == 'nombresHijos'){
                                         dataContent += '</div><div style="margin-left:10px;text-align: justify;max-width: 180px;"><p style="margin-top:10px; margin-bottom:0">Datos Hijo</p>';
                                     }
-                                    console.log(key)
+                                   
                                     if(key == 'padresAdicionales' || key == 'total' || key == 'qr'){
                                         dataContent += '</div></div>'
                                     }
@@ -395,8 +389,8 @@
 
         function recalcularTotal() {
             var total = 0;
-            var precioTipo = parseFloat($('#selectTipo option:selected').data('precio')) * $('#tiempo').val();
-            var precioAdicional = parseFloat($('#selectTipo option:selected').data('precio-adicional')) * $('#tiempo').val();
+            var precioTipo = parseFloat($('#selectTipo option:selected').data('precio')) * $('#ninos').val();
+            var precioAdicional = parseFloat($('#selectTipo option:selected').data('precio-adicional'));
             total += precioTipo; // Sumar el precio del tipo seleccionado
             
             // Sumar el precio de los padres adicionales
@@ -434,5 +428,41 @@
             $('#datos_result').html('');
             $('#botones').hide();
         });
+
+        document.getElementById('tiempo').addEventListener('input', function() {
+            var tiempoInput = document.getElementById('tiempo');
+            var tiempoValue = parseInt(tiempoInput.value);
+
+            if (tiempoValue < 0) {
+                tiempoInput.value = 0;
+            }
+        });
+
+        document.getElementById('ninos').addEventListener('input', function() {
+            var tiempoInput = document.getElementById('ninos');
+            var tiempoValue = parseInt(tiempoInput.value);
+
+            if (tiempoValue < 0) {
+                tiempoInput.value = 0;
+            }
+        });
+
+        $('#modalPagar').on('show.bs.modal', function (e) {
+            var numNinos = parseInt($('#ninos').val());
+            var adicionalesContainer = $('.adicionales');
+            adicionalesContainer.empty(); // Limpiar el contenedor antes de agregar nuevos elementos
+
+            for (var i = 0; i < numNinos; i++) {
+                // Crear un nuevo elemento para cada niño
+                var nuevoElemento = $('<div class="form-group col-sm-12" style="padding: 0px 10px;">' +
+                                        '<label for="nombreHijo' + i + '">Nombre</label>' +
+                                        '<input type="text" class="form-control nombresHijos" id="nombreHijo' + i + '" placeholder="Nombre del Hijo">' +
+                                      '</div>');
+
+                // Agregar el nuevo elemento al contenedor
+                adicionalesContainer.append(nuevoElemento);
+            }
+        });
+
     }); 
 </script>

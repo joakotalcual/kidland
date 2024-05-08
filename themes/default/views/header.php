@@ -187,6 +187,8 @@
                         <li class="divider"></li>
                         <li id=""><a href="<?= site_url('salones/list_horario'); ?>"><i class="fa fa-circle-o"></i> <?= lang('List Horario'); ?></a></li>
                         <li id=""><a href="<?= site_url('salones/add_horario'); ?>"><i class="fa fa-circle-o"></i> <?= lang('Agregar Horario'); ?></a></li>
+                        <li class="divider"></li>
+                        <li id=""><a href="<?= site_url('salones/escaneoqr'); ?>"><i class="fa fa-circle-o"></i> <?= lang('Escaneo QR'); ?></a></li>
                     </ul>
                 </li>
                 <li class="treeview mm_products">

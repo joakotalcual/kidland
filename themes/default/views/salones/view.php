@@ -63,6 +63,9 @@
                     </tr>
                 </tbody>
             </table>
+            <div style="display:flex;justify-content: center;margin-bottom: 10px;">
+                <?= $alquiler->qr ?>
+            </div>
             <div style="display: flex;justify-content: center;">
                 <button class="btn btn-primary" id="botonImprimir">Imprimir factura</button>
             </div>

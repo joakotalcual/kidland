@@ -62,24 +62,24 @@ class Juegos extends MY_Controller {
             // Verificar si la inserción de la venta de juego fue exitosa
             if ($sale_juego_id) {
                 // Array de personas
-                $personas = [
-                    [
-                        'nombre' => $data['nombrePadre'],
-                        'telefono' => $data['telefonoPadre'],
-                        'instagram' => $data['instagramPadre'],
-                        'direccion' => $data['direccionPadre'],
-                        'tipo_persona' => 'Padre', // Opcional: puedes agregar un campo para distinguir el tipo de persona
-                        'sale_juego_id' => $sale_juego_id,
-                    ],
-                    [
-                        'nombre' => $data['nombreHijo'],
-                        'telefono' => $data['telefonoHijo'],
-                        'instagram' => $data['instagramHijo'],
-                        'direccion' => $data['direccionHijo'],
-                        'tipo_persona' => 'Hijo',
-                        'sale_juego_id' => $sale_juego_id,
-                    ]
+                $personas[] = [
+                    'nombre' => $data['nombrePadre'],
+                    'telefono' => $data['telefonoPadre'],
+                    'instagram' => $data['instagramPadre'],
+                    'direccion' => $data['direccionPadre'],
+                    'tipo_persona' => 'Padre', // Opcional: puedes agregar un campo para distinguir el tipo de persona
+                    'sale_juego_id' => $sale_juego_id,
                 ];
+ 
+                if (!empty($data['nombresHijos'])) {
+                    foreach ($data['nombresHijos'] as $nombreHijo) {
+                        $personas[] = [
+                            'nombre' => $nombreHijo,
+                            'tipo_persona' => 'Hijo',
+                            'sale_juego_id' => $sale_juego_id,
+                        ];
+                    }
+                }
 
                 // Agregar personas adicionales si existen
                 if (!empty($data['padresAdicionales'])) {
@@ -924,6 +924,7 @@ class Juegos extends MY_Controller {
                 'nombre' => $this->input->post('nombre'),
                 'precio' => $this->input->post('precio'),
                 'precio_adicional' => $this->input->post('precio_adicional'),
+                'tiempo' => $this->input->post('tiempo'),
                 'store_id' => $this->session->userdata('store_id'),
                 );
         }

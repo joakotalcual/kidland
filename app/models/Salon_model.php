@@ -28,6 +28,14 @@ class Salon_model extends CI_Model
         return FALSE;
     }
 
+    
+    public function updateAlquiler($id, $data = array()) {
+        if ($this->db->update('alquiler_salones', $data, array('id' => $id))) {
+            return true;
+        }
+        return false;
+    }
+
     public function obtener_detalle_alquiler($id = NULL) {
         // Verificar si se proporcionó un ID válido
         if ($id) {
@@ -104,6 +112,21 @@ class Salon_model extends CI_Model
         // Consulta para obtener los datos del pedido por su ID
         $this->db->select('*');
         $this->db->from('salones');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+
+        // Verificar si se encontró el pedido
+        if ($query->num_rows() > 0) {
+            return $query->row(); // Devolver los datos del pedido
+        } else {
+            return false; // Si no se encuentra, devolver falso
+        }
+    }
+
+    public function getAlquilerById($id) {
+        // Consulta para obtener los datos del pedido por su ID
+        $this->db->select('*');
+        $this->db->from('alquiler_salones');
         $this->db->where('id', $id);
         $query = $this->db->get();
 

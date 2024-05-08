@@ -24,6 +24,11 @@
                                     <?= lang('precio_adicional', 'precio_adicional'); ?>
                                     <?= form_input('precio_adicional', $tipo->precio_adicional, 'class="form-control tip" id="precio_adicional"'); ?>
                                 </div>
+
+                                <div class="form-group">
+                                    <?= lang('Tiempo', 'Tiempo'); ?>
+                                    <?= form_input('tiempo', $tipo->tiempo, 'class="form-control tip" id="tiempo"'); ?>
+                                </div>
                                
                         <div class="form-group">
                             <?= form_submit('edit_tipos', lang('edit_tipos'), 'class="btn btn-primary"'); ?>

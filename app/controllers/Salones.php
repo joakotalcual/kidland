@@ -52,12 +52,27 @@ class Salones extends MY_Controller {
             'total' => $total,
             'fecha' => $fecha,
             'metodo_pago' => $metodoPago,
+            'capacidad' => 110,
             'items' => json_encode($items) // Convertir el array de items a JSON antes de guardar en la base de datos
         );
 
+        $alquiler = $this->db->insert('tec_alquiler_salones', $datosAlquiler);
+
+        
+
+        
         // Insertar los datos del alquiler en la base de datos
-        if ($this->db->insert('tec_alquiler_salones', $datosAlquiler)) {
+        if ($alquiler) {
             $idAlquiler = $this->db->insert_id();
+            $qrcode = new Generator;
+            $serverUrl = base_url();
+            $qrCodeUrl = $serverUrl . 'salones/invitado/' . $idAlquiler;
+            $qrCodes = $qrcode->size(120)->generate($qrCodeUrl);
+
+            $data_update_alquiler = [
+                'qr' => $qrCodes,
+            ];
+            $this->salon_model->updateAlquiler($idAlquiler, $data_update_alquiler);
             echo json_encode(array('success' => true, 'message' => 'Datos guardados correctamente', 'id_alquiler' => $idAlquiler, 'store_id' => $this->session->userdata('store_id')));
         } else {
             echo json_encode(array('success' => false, 'message' => 'Error al guardar los datos'));
@@ -153,7 +168,7 @@ class Salones extends MY_Controller {
 
         $this->load->library('datatables');
 
-        $this->datatables->select('salones.id as pid, salones.nombre, salones.precio', FALSE);
+        $this->datatables->select('salones.id as pid, salones.nombre, salones.precio, salones.capacidad', FALSE);
 
         $this->datatables->from('salones');
 
@@ -515,4 +530,43 @@ class Salones extends MY_Controller {
         echo json_encode(['disponible' => $disponible]);
     }
 
+    public function escaneoqr() {
+        $this->data['page_title'] = lang('Escaneo QR');
+        $bc = array(array('link' => '#', 'page' => lang('Escaneo QR')));
+        $meta = array('page_title' => lang('Escaneo QR'), 'bc' => $bc);
+        $this->page_construct('salones/escaneoqr', $this->data, $meta);
+    }
+
+    public function invitado($id)
+    {
+        // Buscar el registro en la tabla alquiler_salones por su ID
+        $alquilerSalon = $this->salon_model->getAlquilerById($id);
+
+        // Verificar si se encontró el registro
+        if ($alquilerSalon) {
+
+            // Verificar si la capacidad es mayor que 0
+            if ($alquilerSalon->capacidad > 0) {
+                // Restar 1 a la capacidad
+                
+                $alquilerSalon->capacidad -= 1;
+
+                // Guardar los cambios en la base de datos
+                $this->salon_model->updateAlquiler($id, $alquilerSalon);
+
+                // Devolver un mensaje de éxito
+                $response = array('success' => false, 'message' => '1');
+                $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($response));
+                return;
+            } else {
+                // Devolver un mensaje de error si la capacidad es 0
+                $response = array('success' => false, 'message' => '0');
+                $this->output->set_status_header(200)->set_content_type('application/json')->set_output(json_encode($response));
+                return;
+            }
+        } else {
+            // Devolver un mensaje de error si no se encuentra el registro
+            return $this->response->setStatusCode(404)->setJSON(['error' => 'El salón no existe']);
+        }
+    }
 }
