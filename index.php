@@ -1,5 +1,36 @@
 <?php
+
+function loadEnv($filePath) {
+    if (!file_exists($filePath)) {
+        throw new Exception("El archivo .env no existe en la ruta especificada: $filePath");
+    }
+
+    $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+    foreach ($lines as $line) {
+        // Ignorar comentarios
+        if (strpos(trim($line), '#') === 0) {
+            continue;
+        }
+
+        // Dividir por el primer signo de igual
+        list($name, $value) = explode('=', $line, 2);
+
+        // Quitar espacios en blanco y comillas
+        $name = trim($name);
+        $value = trim($value, " \t\n\r\0\x0B\"");
+
+        // Configurar la variable de entorno
+        $_ENV[$name] = $value;
+    }
+}
+
+// Ruta al archivo .env
+
+// Cargar el archivo .env
 try {
+	$envFilePath = __DIR__ . '/.env';
+	loadEnv($envFilePath);
 /*
  * --------------------------------------------------------------------
  * SET YOUR TIMEZONE

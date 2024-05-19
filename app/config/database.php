@@ -64,10 +64,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'bqd56mprakeyuebcyre5-mysql.services.clever-cloud.com',
-	'username' => 'u6v1ujfpuwf3njr8',
-	'password' => 'lNcdk3d4eiNI0m3IWNiH',
-	'database' => 'bqd56mprakeyuebcyre5',
+	'hostname' => $_ENV['MYSQL_ADDON_HOST'],
+	'username' => $_ENV['MYSQL_ADDON_USER'],
+	'password' => $_ENV['MYSQL_ADDON_PASSWORD'],
+	'database' => $_ENV['MYSQL_ADDON_DB'],
 	'dbdriver' => 'mysqli',
 	'dbprefix' => 'tec_',
 	'pconnect' => FALSE,
@@ -82,6 +82,6 @@ $db['default'] = array(
 	'stricton' => FALSE,
 	'failover' => array(),
 	'save_queries' => FALSE,
-	'db_port' => 20969,
-	'port' => 20969
+	//'db_port' => 20969,
+	'port' => $_ENV['MYSQL_ADDON_PORT']
 );
