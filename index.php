@@ -29,7 +29,7 @@ function loadEnv($filePath) {
 
 // Cargar el archivo .env
 try {
-	$envFilePath = __DIR__ . '/.env';
+	$envFilePath = __DIR__ . '/env';
 	loadEnv($envFilePath);
 /*
  * --------------------------------------------------------------------
