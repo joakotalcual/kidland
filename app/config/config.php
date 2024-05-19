@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'https://kidslan-pos.cleverapps.io';
+$config['base_url'] = 'http://kidsland.local';
 
 /*
 |--------------------------------------------------------------------------

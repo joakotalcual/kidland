@@ -64,7 +64,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'brh9vy2qiwsevpy2xjsv-mysql.services.clever-cloud.com:',
+	'hostname' => 'bqd56mprakeyuebcyre5-mysql.services.clever-cloud.com',
 	'username' => 'u6v1ujfpuwf3njr8',
 	'password' => 'lNcdk3d4eiNI0m3IWNiH',
 	'database' => 'bqd56mprakeyuebcyre5',
@@ -83,5 +83,5 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => FALSE,
 	'db_port' => 20969,
-	'port' => '20969'
+	'port' => 20969
 );
