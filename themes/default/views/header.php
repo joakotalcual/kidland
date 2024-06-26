@@ -9,6 +9,11 @@
     <?= $Settings->rtl ? '<link href="'.$assets.'dist/css/rtl.css" rel="stylesheet" />' : ''; ?>
     <script src="<?= $assets ?>plugins/jQuery/jQuery-2.1.4.min.js"></script>
 </head>
+<style type="text/css">
+    .sidebar{
+        overflow-y: scroll !important;
+    }
+</style>
 <body class="skin-<?= $Settings->theme_style; ?> fixed sidebar-mini">
 <div class="wrapper rtl rtl-inv">
 
@@ -120,7 +125,7 @@
     </header>
 
     <aside class="main-sidebar">
-        <section class="sidebar">
+        <section class="sidebar" style="overflow-y: scroll !important;">
             <ul class="sidebar-menu">
                 <!-- <li class="header"><?= lang('mian_navigation'); ?></li> -->
 

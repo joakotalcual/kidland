@@ -902,7 +902,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal"> <?=lang('close')?> </button>
-            <button class="btn btn-primary" id="<?= $eid ? '' : 'submit-sale'; ?>"><?=lang('submit')?></button>
+            <button class="btn btn-primary" id="<?= $eid ? '' : 'submit-sale'; ?>" onclick="this.disabled=true; this.innerText='Processing...';"><?=lang('submit')?></button>
         </div>
     </div>
 </div>
