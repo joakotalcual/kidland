@@ -569,4 +569,105 @@ class Salones extends MY_Controller {
             return $this->response->setStatusCode(404)->setJSON(['error' => 'El salón no existe']);
         }
     }
+
+    public function calendario($year = NULL, $month = NULL) {
+ 
+        /*$this->data['clientes'] = $this->site->getAllCustomers();
+        $this->data['salones'] = $this->salon_model->getAllSalones();
+        $this->data['inventario'] = $this->salon_model->getAllInventario();
+        $this->data['horarios'] = $this->salon_model->getAllHorarios();
+        $this->data['page_title'] = 'Salones';
+        $meta = array('page_title' => 'Salones');
+
+        $this->page_construct('salones/calendario', $this->data, $meta);*/
+
+        if (!$year) { $year = date('Y'); }
+        if (!$month) { $month = date('m'); }
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->lang->load('calendar');
+        $config = array(
+            'show_next_prev' => TRUE,
+            'next_prev_url' => site_url('salones/calendario'),
+            'month_type' => 'long',
+            'day_type' => 'long'
+            );
+        $config['template'] = '
+
+        {table_open}<table border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-calendar" style="min-width:522px;">{/table_open}
+
+        {heading_row_start}<tr class="active">{/heading_row_start}
+
+        {heading_previous_cell}<th><div class="text-center"><a href="{previous_url}">&lt;&lt;</div></a></th>{/heading_previous_cell}
+        {heading_title_cell}<th colspan="{colspan}"><div class="text-center">{heading}</div></th>{/heading_title_cell}
+        {heading_next_cell}<th><div class="text-center"><a href="{next_url}">&gt;&gt;</a></div></th>{/heading_next_cell}
+
+        {heading_row_end}</tr>{/heading_row_end}
+
+        {week_row_start}<tr>{/week_row_start}
+        {week_day_cell}<td class="cl_equal"><div class="cl_wday">{week_day}</div></td>{/week_day_cell}
+        {week_row_end}</tr>{/week_row_end}
+
+        {cal_row_start}<tr>{/cal_row_start}
+        {cal_cell_start}<td>{/cal_cell_start}
+
+        {cal_cell_content}{day}<br>{content}{/cal_cell_content}
+        {cal_cell_content_today}<div class="highlight">{day}</div>{content}{/cal_cell_content_today}
+
+        {cal_cell_no_content}{day}{/cal_cell_no_content}
+        {cal_cell_no_content_today}<div class="highlight">{day}</div>{/cal_cell_no_content_today}
+
+        {cal_cell_blank}&nbsp;{/cal_cell_blank}
+
+        {cal_cell_end}</td>{/cal_cell_end}
+        {cal_row_end}</tr>{/cal_row_end}
+
+        {table_close}</table>{/table_close}
+        ';
+
+        $this->load->library('calendar', $config);
+
+        $alquileres = $this->salon_model->getAlquileres($year, $month);
+        $html = '';
+        if (!empty($alquileres)) {
+            foreach ($alquileres as $alquiler) {
+                $alquiler->date = intval($alquiler->date);
+                $html .= "<table class='table table-condensed table-striped' style='margin-bottom:10px;'>
+                <tr>
+                    <td>Cliente</td>
+                    <td style='text-align:right;font-weight: 500;'>{$alquiler->nombre_cliente}</td>
+                </tr>
+                <tr>
+                    <td>Salon</td>
+                    <td style='text-align:right;font-weight: 500;'>{$alquiler->nombre_salon}</td>
+                </tr>
+                <tr>
+                    <td>Hora Entrada</td>
+                    <td style='text-align:right;font-weight: 500;'>{$alquiler->hora_entrada}</td>
+                </tr>
+                <tr>
+                    <td>Hora Salida</td>
+                    <td style='text-align:right;font-weight: 500;'>{$alquiler->hora_salida}</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td style='text-align:right;font-weight: 500;'>{$this->tec->formatMoney($alquiler->total)}</td>
+                </tr>
+                </table>";
+            }
+            $daily_sale[$alquiler->date] = $html;
+        } else {
+            $daily_sale = array();
+        }
+
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['calender'] = $this->calendar->generate($year, $month, $daily_sale);
+
+        $start = $year.'-'.$month.'-01 00:00:00';
+        $end = $year.'-'.$month.'-'.days_in_month($month, $year).' 23:59:59';
+
+        $this->data['page_title'] = $this->lang->line("Calendario Salones");
+        $bc = array(array('link' => '#', 'page' => lang('reports')), array('link' => '#', 'page' => lang('Calendario Salones')));
+        $meta = array('page_title' => lang('Calendario Salones'), 'bc' => $bc);
+        $this->page_construct('salones/calendario', $this->data, $meta);
+    }
 }

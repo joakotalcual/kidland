@@ -306,4 +306,20 @@ class Salon_model extends CI_Model
             return null;
         }
     }
+
+
+    public function getAlquileres($year, $month) {
+        $this->db->select("DATE_FORMAT(fecha,  '%d') AS date, total, hora_entrada,hora_salida, total,nombre_cliente,nombre_salon", FALSE);
+        $this->db->like('fecha', "{$year}-{$month}", 'after');
+       
+        $q = $this->db->get('alquiler_salones');
+        
+        if($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+    }
 }
