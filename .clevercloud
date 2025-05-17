@@ -1,8 +1,0 @@
-{
-  "deploy": {
-    "document_root": "/"
-  },
-  "runtime": {
-    "php": "7.4"
-  }
-}
