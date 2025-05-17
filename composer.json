@@ -1,23 +1,23 @@
 {
-	"name": "saleem/spos",
-	"version": "4.0.28",
-	"description": "Simple POS",
-	"type": "project",
-	"authors": [
-		{
-			"name": "Mian Saleem",
-			"email": "saleem@tecdiary.com"
-		}
-	],
-	"require": {
-                "php": ">=7.4"
-		"phpmailer/phpmailer": "^6.0",
-		"mike42/escpos-php": "^2.0",
-		"stripe/stripe-php": "^6.6",
-		"laminas/laminas-barcode": "^2.13",
-		"endroid/qr-code": "^4.6",
-		"bacon/bacon-qr-code": "^2.0",
-		"chillerlan/php-qrcode": "^5.0",
-		"simplesoftwareio/simple-qrcode": "^4.2"
-	}
+    "name": "saleem/spos",
+    "version": "4.0.28",
+    "description": "Simple POS",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Mian Saleem",
+            "email": "saleem@tecdiary.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "phpmailer/phpmailer": "^6.0",
+        "mike42/escpos-php": "^2.0",
+        "stripe/stripe-php": "^6.6",
+        "laminas/laminas-barcode": "^2.13",
+        "endroid/qr-code": "^4.6",
+        "bacon/bacon-qr-code": "^2.0",
+        "chillerlan/php-qrcode": "^5.0",
+        "simplesoftwareio/simple-qrcode": "^4.2"
+    }
 }
